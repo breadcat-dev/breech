@@ -70,6 +70,11 @@ public final class BinaryInput implements AutoCloseable
         return bytes;
     }
 
+    public int read(byte[] buffer) throws IOException
+    {
+        return in.read(buffer);
+    }
+
 
     public int readByte() throws IOException
     {
