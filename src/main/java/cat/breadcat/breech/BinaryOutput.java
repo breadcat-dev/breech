@@ -46,6 +46,11 @@ public final class BinaryOutput implements AutoCloseable
         out.write(data);
     }
 
+    public void writeBytes(byte[] data, int offset, int size) throws IOException
+    {
+        out.write(data, offset, size);
+    }
+
 
     public void writeByte(int data) throws IOException
     {
