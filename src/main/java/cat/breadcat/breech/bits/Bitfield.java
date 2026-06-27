@@ -65,7 +65,4 @@ public final class Bitfield
     {
         return size;
     }
-
-
-    // byte stream shit idk
 }
