@@ -1,5 +1,8 @@
-package cat.breadcat.breech;
+package cat.breadcat.breech.bytes;
 
+import cat.breadcat.breech.BinaryEndianness;
+import cat.breadcat.breech.bits.Bitfield;
+import cat.breadcat.breech.bits.BitfieldSize;
 import cat.breadcat.toolbox.units.PrimitiveUnits;
 
 import java.io.EOFException;
@@ -76,14 +79,15 @@ public final class BinaryInput implements AutoCloseable
     }
 
 
-    public int readByte() throws IOException
+
+    public byte readByte() throws IOException
     {
-        return (int)readValue(PrimitiveUnits.BYTE);
+        return (byte)readValue(PrimitiveUnits.BYTE);
     }
 
-    public int readShort() throws IOException
+    public short readShort() throws IOException
     {
-        return (int)readValue(PrimitiveUnits.SHORT);
+        return (short)readValue(PrimitiveUnits.SHORT);
     }
 
     public int readInt() throws IOException
@@ -94,6 +98,36 @@ public final class BinaryInput implements AutoCloseable
     public long readLong() throws IOException
     {
         return readValue(PrimitiveUnits.LONG);
+    }
+
+
+    public float readFloat() throws IOException
+    {
+        return Float.intBitsToFloat((int)readValue(PrimitiveUnits.FLOAT));
+    }
+
+    public double readDouble() throws IOException
+    {
+        return Double.longBitsToDouble(readValue(PrimitiveUnits.DOUBLE));
+    }
+
+
+    public boolean readBoolean() throws IOException
+    {
+        return readValue(PrimitiveUnits.BYTE) > 0;
+    }
+
+    public Bitfield readBitfield(BitfieldSize size) throws IOException
+    {
+        int byteSize = size.getBytes();
+
+        return new Bitfield(readValue(byteSize), byteSize);
+    }
+
+
+    public char readChar() throws IOException
+    {
+        return (char)readValue(PrimitiveUnits.CHAR);
     }
 
     public String readString() throws IOException
