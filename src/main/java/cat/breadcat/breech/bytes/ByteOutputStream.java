@@ -1,21 +1,21 @@
 package cat.breadcat.breech.bytes;
 
-import cat.breadcat.breech.BinaryEndianness;
 import cat.breadcat.breech.bits.Bitfield;
 import cat.breadcat.toolbox.units.DataUnits;
 import cat.breadcat.toolbox.units.PrimitiveUnits;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-public final class BinaryOutput implements AutoCloseable
+public final class ByteOutputStream implements Closeable
 {
     private final OutputStream out;
     private final byte[] buffer;
     private final BinaryEndianness endianness;
 
-    public BinaryOutput(BinaryEndianness endianness, OutputStream out)
+    public ByteOutputStream(BinaryEndianness endianness, OutputStream out)
     {
         this.out = out;
         this.buffer = new byte[PrimitiveUnits.LONG];

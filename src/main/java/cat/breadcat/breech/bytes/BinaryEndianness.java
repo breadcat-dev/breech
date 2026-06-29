@@ -1,4 +1,4 @@
-package cat.breadcat.breech;
+package cat.breadcat.breech.bytes;
 
 public enum BinaryEndianness
 {
