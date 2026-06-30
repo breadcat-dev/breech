@@ -1,7 +1,6 @@
 package cat.breadcat.breech.bytes;
 
 import cat.breadcat.breech.bits.Bitfield;
-import cat.breadcat.breech.bits.BitfieldSize;
 import cat.breadcat.toolbox.units.PrimitiveUnits;
 
 import java.io.Closeable;
@@ -117,11 +116,12 @@ public final class ByteInputStream implements Closeable
         return readValue(PrimitiveUnits.BYTE) > 0;
     }
 
-    public Bitfield readBitfield(BitfieldSize size) throws IOException
+    public Bitfield readBitfield(int size) throws IOException
     {
-        int byteSize = size.getBytes();
+        if(size > PrimitiveUnits.LONG)
+            throw new IllegalArgumentException("Maximum Bitfield size is LONG (8 Bytes)");
 
-        return new Bitfield(readValue(byteSize), byteSize);
+        return new Bitfield(readValue(size), size);
     }
 
 

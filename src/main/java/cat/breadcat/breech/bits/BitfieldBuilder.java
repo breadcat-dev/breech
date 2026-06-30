@@ -1,5 +1,6 @@
 package cat.breadcat.breech.bits;
 
+import cat.breadcat.toolbox.units.PrimitiveUnits;
 import cat.breadcat.toolbox.utils.BinaryUtil;
 
 public final class BitfieldBuilder
@@ -9,9 +10,12 @@ public final class BitfieldBuilder
     private long bits;
     public int index;
 
-    public BitfieldBuilder(BitfieldSize size)
+    public BitfieldBuilder(int size)
     {
-        this.size = size.getBytes();
+        if(size > PrimitiveUnits.LONG)
+            throw new IllegalArgumentException("Maximum Bitfield size is LONG (8 Bytes)");
+
+        this.size = size;
 
         this.bits = 0L;
         this.index = 0;
