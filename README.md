@@ -20,8 +20,6 @@ Part of the TANK Series.
 - Sequential binary readers and writers
 - Small, straightforward API
 
----
-
 ## Design Goals
 
 - Simple
@@ -64,7 +62,7 @@ implementation("cat.breadcat:breech:<version>")
 
 ---
 
-## Quick Examples
+## Examples
 
 ### Writing
 ```java
@@ -77,6 +75,10 @@ try(BinaryWriter writer = new BinaryWriter
     writer.writeString("BreadCat");
     writer.writeInt(64);
     writer.writeFloat(3.14f);
+}
+catch(IOException e)
+{
+    throw new RuntimeException(e);
 }
 ```
 
@@ -92,8 +94,33 @@ try(BinaryReader reader = new BinaryReader
     int coins = reader.readInt();
     int exp = reader.readFloat();
 }
+catch(IOException e)
+{
+    throw new RuntimeException(e);
+}
 ```
 
+### Bitfield
+```java
+try(BinaryWriter writer = new BinaryWriter
+(
+        new FileOutputStream("save.dat"),
+        ByteOrder.LITTLE_ENDIAN
+))
+{
+    Bitfield bitfield = new BitfieldBuilder(1)
+            .bit(true)
+            .bit(false)
+            .bit(true)
+            .build();
+    
+    writer.writeBitfield(bitfield);
+}
+catch(IOException e)
+{
+    throw new RuntimeException(e);
+}
+```
 
 ---
 
