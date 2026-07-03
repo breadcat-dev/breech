@@ -1,38 +1,45 @@
 package cat.breadcat.breech.bits;
 
-import cat.breadcat.toolbox.units.PrimitiveUnits;
-import cat.breadcat.toolbox.utils.BinaryUtil;
+import cat.breadcat.toolbox.util.BinaryUtil;
 
 public final class Bitfield
 {
+    public static final int MIN_SIZE = 1;
+    public static final int MAX_SIZE = Long.BYTES;
+
     private final long bits;
-    private final int size;
+    private final int byteSize;
+    private final int bitCount;
 
-    public Bitfield(long bits, int size)
+    public Bitfield(long bits, int byteSize)
     {
-        this.bits = bits;
-        this.size = size;
+        if (byteSize < MIN_SIZE || byteSize > MAX_SIZE)
+            throw new IllegalArgumentException("Byte size must be between " + MIN_SIZE + " and " + MAX_SIZE);
+
+        this.byteSize = byteSize;
+        this.bitCount = byteSize * Byte.SIZE;
+
+        long mask = (byteSize == MAX_SIZE) ? -1L : (1L << bitCount) - 1;
+        this.bits = bits & mask;
     }
 
 
-    public static Bitfield fromByte(byte value)
+    public boolean getBit(int index)
     {
-        return new Bitfield(value, PrimitiveUnits.BYTE);
+        if (index < 0 || index >= bitCount)
+            throw new IndexOutOfBoundsException();
+
+        return BinaryUtil.getBit(bits, index);
     }
 
-    public static Bitfield fromShort(short value)
+    public boolean[] toBooleanArray()
     {
-        return new Bitfield(value, PrimitiveUnits.SHORT);
-    }
+        boolean[] array = new boolean[bitCount];
 
-    public static Bitfield fromInt(int value)
-    {
-        return new Bitfield(value, PrimitiveUnits.INT);
-    }
+        for (int i = 0; i < bitCount; i++)
+            array[i] = getBit(i);
 
-    public static Bitfield fromLong(long value)
-    {
-        return new Bitfield(value, PrimitiveUnits.LONG);
+        return array;
     }
 
 
@@ -41,28 +48,13 @@ public final class Bitfield
         return bits;
     }
 
-    public boolean[] getBitsArray()
-    {
-        boolean[] bitsArray = new boolean[size];
-
-        for(int i = 0; i < size; i++)
-        {
-            bitsArray[i] = BinaryUtil.getBit(bits, i);
-        }
-
-        return bitsArray;
-    }
-
-    public boolean getBit(int bitNumber)
-    {
-        if(bitNumber < 0 || bitNumber > size)
-            throw new IllegalArgumentException("Bit is out of Bitfield range");
-
-        return BinaryUtil.getBit(bits, bitNumber);
-    }
-
     public int getByteSize()
     {
-        return size;
+        return byteSize;
+    }
+
+    public int getBitCount()
+    {
+        return bitCount;
     }
 }

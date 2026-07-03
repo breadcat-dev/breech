@@ -1,61 +1,101 @@
-# Breech - Lightweight ~~& Reliable~~ binary I/O library for Java
-### Part of my TANK Series
+# Breech
 
-## Status
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+![Java](https://img.shields.io/badge/Java-21-blue)
+![Status](https://img.shields.io/badge/status-experimental-orange)
+![Release](https://img.shields.io/github/v/release/breadcat-dev/breech)
 
-EXPERIMENTAL - API might change in the future
+> A lightweight binary I/O library for Java projects
 
-## What it does
-- Reads and writes primitive binary data (`byte`, `short`, `int`, `long`)
-- Supports both little-endian and big-endian byte order
-- Reads and writes length-prefixed UTF-8 strings
-- Provides reliable EOF handling for incomplete data
-- Lightweight wrapper around Java streams
+Part of the TANK Series.
+
+---
+
+## Features
+
+- Read and write all Java primitive types
+- Big-endian and little-endian support
+- Variable-size bitfields (1–8 bytes)
+- UTF-8 string serialization
+- Sequential binary readers and writers
+- Small, straightforward API
+
+---
+
+## Design Goals
+
+- Simple
+- Lightweight
+- Reusable
+
+---
+
+## Installation
+
+Currently, Breech is not on Maven Central.
+To use it, clone the repository and publish it to your local Maven Repository.
 
 
-## Examples
+```sh
+git clone https://github.com/breadcat-dev/breech.git
+cd breech
+```
 
-Write to File
+### Linux / MacOS
+```sh
+./gradlew publishToMavenLocal
+```
+### Windows
+```sh
+./gradlew.bat publishToMavenLocal
+```
+
+Once installed, add the dependency:
+
+### Groovy
+```gradle
+implementation "cat.breadcat:breech:<version>"
+```
+
+### Kotlin DSL
+```gradle
+implementation("cat.breadcat:breech:<version>")
+```
+
+---
+
+## Quick Examples
+
+### Writing
 ```java
-String name = "breadcatz";
-int score = 3689;
-
-try(BinaryOutput out = new BinaryOutput(BinaryEndianness.LittleEndian, Files.newOutputStream(Path.of("./data.bin"))))
+try(BinaryWriter writer = new BinaryWriter
+(
+    new FileOutputStream("save.dat"),
+    ByteOrder.LITTLE_ENDIAN
+))
 {
-    out.writeString(name);
-    out.writeInt(score);
-}
-catch (IOException e)
-{
-    throw new RuntimeException(e);
+    writer.writeString("BreadCat");
+    writer.writeInt(64);
+    writer.writeFloat(3.14f);
 }
 ```
 
-(HEX view of data.bin)
-```
-09 00 00 00 62 72 65 61 64 63 61 74 7A 69 0E 00 00
-```
-
-Read from File
+### Reading
 ```java
-try(BinaryInput in = new BinaryInput(BinaryEndianness.LittleEndian, Files.newInputStream(Path.of("data.bin"))))
+try(BinaryReader reader = new BinaryReader
+(
+    new FileInputStream("save.dat"),
+    ByteOrder.LITTLE_ENDIAN
+))
 {
-    String name = in.readString();
-    int score = in.readInt();
-
-    System.out.println("name - " + name + "\nscore - " + score);
-}
-catch (IOException e)
-{
-    throw new RuntimeException(e);
+    String name = reader.readString();
+    int coins = reader.readInt();
+    int exp = reader.readFloat();
 }
 ```
 
-(Console)
-```
-name - breadcatz
-score - 3689
-```
+
+---
 
 ## Dependencies:
-- Toolbox: `cat.breadcat:toolbox:[VERSION]` [Github](https://github.com/breadcat-dev/toolbox)
+- Toolbox - [Github](https://github.com/breadcat-dev/toolbox)

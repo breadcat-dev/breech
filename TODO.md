@@ -1,0 +1,2 @@
+- Add Javadocs
+- Add BinaryFile

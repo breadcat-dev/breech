@@ -1,41 +1,40 @@
 package cat.breadcat.breech.bits;
 
-import cat.breadcat.toolbox.units.PrimitiveUnits;
-import cat.breadcat.toolbox.utils.BinaryUtil;
+import cat.breadcat.toolbox.util.BinaryUtil;
 
 public final class BitfieldBuilder
 {
-    private final int size;
+    private final int byteSize;
+    private final int bitCount;
 
     private long bits;
-    public int index;
+    private int index;
 
-    public BitfieldBuilder(int size)
+    public BitfieldBuilder(int byteSize)
     {
-        if(size > PrimitiveUnits.LONG)
-            throw new IllegalArgumentException("Maximum Bitfield size is LONG (8 Bytes)");
+        if (byteSize < Bitfield.MIN_SIZE || byteSize > Bitfield.MAX_SIZE)
+            throw new IllegalArgumentException("Byte size must be between " + Bitfield.MIN_SIZE + " and " + Bitfield.MAX_SIZE);
 
-        this.size = size;
-
-        this.bits = 0L;
-        this.index = 0;
+        this.byteSize = byteSize;
+        this.bitCount = byteSize * Byte.SIZE;
     }
 
 
     public BitfieldBuilder bit(boolean value)
     {
+        if(index >= bitCount)
+            throw new IllegalStateException("Bitfield is full");
+
         if(value)
             bits = BinaryUtil.setBit(bits, index);
-        index++;
 
+        index++;
         return this;
     }
 
+
     public Bitfield build()
     {
-        if(index > size)
-            throw new IllegalStateException("More Bits set than maximum Bitfield size");
-
-        return new Bitfield(bits, size);
+        return new Bitfield(bits, byteSize);
     }
 }
