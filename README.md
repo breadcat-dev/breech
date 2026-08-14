@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 ![Java](https://img.shields.io/badge/Java-21-blue)
-![Status](https://img.shields.io/badge/status-stable-brightgreen)
+![Status](https://img.shields.io/badge/status-deprecated-lightgrey)
 ![Release](https://img.shields.io/github/v/release/breadcat-dev/breech)
 
 > A lightweight binary I/O library for Java projects
